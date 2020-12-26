@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS company_levels;
+
+DROP TABLE IF EXISTS transactions;
+
+DROP TABLE IF EXISTS company;
+
+DROP TABLE IF EXISTS usr;
