@@ -1,0 +1,24 @@
+name: test and docker build action
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Test
+        run: go test -v
+        
+      - name: Extract Git Tag
+        run: echo ::set-env name=GIT_TAG::${GITHUB_REF/refs\/tags\//}
+
+      - name: Docker build
+        env:
+          DOCKER_ID: gexaigor
+          IMAGE_TAG: ${{ env.GIT_TAG }}
+        run: docker build . -t $DOCKER_ID/giftex:$IMAGE_TAG
