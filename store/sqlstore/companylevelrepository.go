@@ -16,10 +16,11 @@ func (r *CompanyLevelRepository) Save(companylevel *model.CompanyLevel) error {
 	}
 
 	return r.store.db.QueryRow(
-		"INSERT INTO company_levels (company_id, experience, level) VALUES ($1, $2, $3) RETURNING id",
+		"INSERT INTO company_levels (company_id, experience, level, description) VALUES ($1, $2, $3, $4) RETURNING id",
 		companylevel.Company.ID,
 		companylevel.Experience,
 		companylevel.Level,
+		companylevel.Description,
 	).Scan(&companylevel.ID)
 }
 

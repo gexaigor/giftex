@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -137,6 +138,42 @@ func (s *Server) handleAuth() http.HandlerFunc {
 	}
 }
 
+// handleCompanyGetList ...
+func (s *Server) handleCompanyGetList() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		v := r.URL.Query()
+		pageString := v.Get("page")
+		if pageString == "" {
+			s.error(w, r, http.StatusBadRequest, errorBadRequest)
+			return
+		}
+		page, err := strconv.Atoi(pageString)
+		if err != nil {
+			s.error(w, r, http.StatusBadRequest, errorBadRequest)
+			return
+		}
+
+		limitString := v.Get("limit")
+		if limitString == "" {
+			s.error(w, r, http.StatusBadRequest, errorBadRequest)
+			return
+		}
+		limit, err := strconv.Atoi(limitString)
+		if err != nil {
+			s.error(w, r, http.StatusBadRequest, errorBadRequest)
+			return
+		}
+
+		companys, err := s.store.Company().FindAll(page, limit)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		s.respond(w, r, http.StatusOK, companys)
+	}
+}
+
 //------------USER------------
 // handleUserGet ...
 func (s *Server) handleUserGet() http.HandlerFunc {
@@ -244,8 +281,9 @@ func (s *Server) handleCompanyEdit() http.HandlerFunc {
 // handleCompanyLevelCreate ...
 func (s *Server) handleLevelCreate() http.HandlerFunc {
 	type request struct {
-		Expreience int64 `json:"experience"`
-		Level      int   `json:"level"`
+		Expreience  int64  `json:"experience"`
+		Level       int    `json:"level"`
+		Description string `json:"description"`
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -262,9 +300,10 @@ func (s *Server) handleLevelCreate() http.HandlerFunc {
 		}
 
 		companyLevel := &model.CompanyLevel{
-			Company:    company,
-			Experience: req.Expreience,
-			Level:      req.Level,
+			Company:     company,
+			Experience:  req.Expreience,
+			Level:       req.Level,
+			Description: req.Description,
 		}
 
 		err := s.store.CompanyLevel().Save(companyLevel)
@@ -343,14 +382,17 @@ func (s *Server) handleCompanyTransactionCreate() http.HandlerFunc {
 
 // handleUserTransactionGet ...
 func (s *Server) handleUserTransactionGet() http.HandlerFunc {
-	type request struct {
-		CompanyID int64 `json:"company_id"`
-	}
-
 	return func(w http.ResponseWriter, r *http.Request) {
-		req := &request{}
-		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
-			s.error(w, r, http.StatusBadRequest, err)
+		v := r.URL.Query()
+		companyIDString := v.Get("company_id")
+
+		if companyIDString == "" {
+			s.error(w, r, http.StatusBadRequest, errorBadRequest)
+			return
+		}
+		companyID, err := strconv.ParseInt(companyIDString, 10, 64)
+		if err != nil {
+			s.error(w, r, http.StatusBadRequest, errorBadRequest)
 			return
 		}
 
@@ -360,7 +402,7 @@ func (s *Server) handleUserTransactionGet() http.HandlerFunc {
 			return
 		}
 
-		company, err := s.store.Company().FindByID(req.CompanyID)
+		company, err := s.store.Company().FindByID(companyID)
 		if err != nil {
 			s.error(w, r, http.StatusBadRequest, err)
 			return

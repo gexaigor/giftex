@@ -11,14 +11,11 @@ import (
 
 // jwtMiddleware ...
 func (s *Server) jwtMiddleware(next http.Handler) http.Handler {
-
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 		notAuth := []string{"/account", "/auth"}
 		requestPath := r.URL.Path
 
 		for _, value := range notAuth {
-
 			if value == requestPath && r.Method == "POST" {
 				next.ServeHTTP(w, r)
 				return
@@ -66,7 +63,6 @@ func (s *Server) jwtMiddleware(next http.Handler) http.Handler {
 
 // userMiddleware ...
 func (s *Server) userMiddleware(next http.Handler) http.Handler {
-
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		user, ok := r.Context().Value(ctxKeyUser).(*model.User)
 		if !ok {
@@ -84,7 +80,6 @@ func (s *Server) userMiddleware(next http.Handler) http.Handler {
 
 // companyMiddleware ...
 func (s *Server) companyMiddleware(next http.Handler) http.Handler {
-
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		user, ok := r.Context().Value(ctxKeyUser).(*model.User)
 		if !ok {

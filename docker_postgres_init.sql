@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS company_levels (
     company_id int NOT NULL,
     experience int NOT NULL,
     level int NOT NULL,
+    description VARCHAR NOT NULL,
     CONSTRAINT fk_company
       FOREIGN KEY(company_id) 
 	  REFERENCES company(id) ON DELETE CASCADE

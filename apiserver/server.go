@@ -52,6 +52,8 @@ func (s *Server) configureRouter() {
 	s.router.HandleFunc("/account", s.handleAccountCreate()).Methods("POST")
 	s.router.HandleFunc("/account", s.handleAccountDelete()).Methods("DELETE")
 
+	s.router.HandleFunc("/company/list", s.handleCompanyGetList()).Methods("GET")
+
 	user := s.router.PathPrefix("/user").Subrouter()
 	user.Use(s.userMiddleware)
 	user.HandleFunc("", s.handleUserGet()).Methods("GET")

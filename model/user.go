@@ -8,37 +8,13 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
-// User represents the user for this application
-//
-// swagger:model User
+// User ...
 type User struct {
-	// the id for this user
-	//
-	// required: false
-	// min: 1
-	ID int64 `json:"id"`
-
-	// the login for this user
-	// required: true
-	// min length: 5
-	// max length: 50
-	Login string `json:"login"`
-
-	// the email for this user
-	// required: true
-	Email string `json:"email"`
-
-	// the password for this user
-	// required: false
-	// min length: 6
-	// max length: 100
-	Password string `json:"-"`
-
-	// swagger:allOf
-	Role Role `json:"role"`
-
-	// the date of user created
-	// required: false
+	ID        int64     `json:"id"`
+	Login     string    `json:"login"`
+	Email     string    `json:"email"`
+	Password  string    `json:"-"`
+	Role      Role      `json:"role"`
 	CreatedOn time.Time `json:"created_on"`
 }
 

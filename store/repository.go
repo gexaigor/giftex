@@ -17,6 +17,7 @@ type UserRepository interface {
 type CompanyRepository interface {
 	Save(company *model.Company) error
 	Update(company *model.Company) error
+	FindAll(page int, limit int) ([]model.Company, error)
 	FindByID(id int64) (*model.Company, error)
 	FindByUser(user *model.User) (*model.Company, error)
 }
