@@ -15,8 +15,15 @@ import (
 //------------ACCOUNT------------
 // handleAccountCreate ...
 func (s *Server) handleAccountCreate() http.HandlerFunc {
+	type request struct {
+		Login     string `json:"login"`
+		Email     string `json:"email"`
+		Password  string `json:"password"`
+		IsCompany bool   `json:"isCompany"`
+	}
+
 	return func(w http.ResponseWriter, r *http.Request) {
-		req := &AccountCreateRequest{}
+		req := &request{}
 		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 			s.error(w, r, http.StatusBadRequest, err)
 			return
