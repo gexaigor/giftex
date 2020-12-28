@@ -11,7 +11,7 @@ type Config struct {
 func NewConfig() *Config {
 	return &Config{
 		BindAddr:    ":8080",
-		DataBaseURL: "host=localhost user=postgres password=87770738522q dbname=myrest sslmode=disable",
+		DataBaseURL: "host=db user=postgres password=giftexpass dbname=giftex sslmode=disable",
 		SecretKey:   "MySecretKey",
 	}
 }
