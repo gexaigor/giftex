@@ -49,28 +49,28 @@ func (s *Server) configureRouter() {
 	s.router.Use(s.jwtMiddleware)
 	s.router.HandleFunc("/auth", s.handleAuth()).Methods("POST")
 
-	s.router.HandleFunc("/account/create", s.handleAccountCreate()).Methods("POST")
-	s.router.HandleFunc("/account/delete", s.handleAccountDelete()).Methods("DELETE")
+	s.router.HandleFunc("/account", s.handleAccountCreate()).Methods("POST")
+	s.router.HandleFunc("/account", s.handleAccountDelete()).Methods("DELETE")
 
 	user := s.router.PathPrefix("/user").Subrouter()
 	user.Use(s.userMiddleware)
-	user.HandleFunc("/get", s.handleUserGet()).Methods("GET")
-	user.HandleFunc("/edit", s.handleUserEdit()).Methods("POST")
+	user.HandleFunc("", s.handleUserGet()).Methods("GET")
+	user.HandleFunc("", s.handleUserEdit()).Methods("PUT")
 
 	userTransaction := user.PathPrefix("/transaction").Subrouter()
-	userTransaction.HandleFunc("/get", s.handleUserTransactionGet()).Methods("GET")
+	userTransaction.HandleFunc("", s.handleUserTransactionGet()).Methods("GET")
 
 	company := s.router.PathPrefix("/company").Subrouter()
 	company.Use(s.companyMiddleware)
-	company.HandleFunc("/get", s.handleCompanyGet()).Methods("GET")
-	company.HandleFunc("/edit", s.handleCompanyEdit()).Methods("POST")
+	company.HandleFunc("", s.handleCompanyGet()).Methods("GET")
+	company.HandleFunc("", s.handleCompanyEdit()).Methods("PUT")
 
 	level := company.PathPrefix("/level").Subrouter()
-	level.HandleFunc("/create", s.handleLevelCreate()).Methods("POST")
-	level.HandleFunc("/get", s.handleLevelGet()).Methods("GET")
+	level.HandleFunc("", s.handleLevelCreate()).Methods("POST")
+	level.HandleFunc("", s.handleLevelGet()).Methods("GET")
 
 	companyTransaction := company.PathPrefix("/transaction").Subrouter()
-	companyTransaction.HandleFunc("/create", s.handleCompanyTransactionCreate()).Methods("POST")
+	companyTransaction.HandleFunc("", s.handleCompanyTransactionCreate()).Methods("POST")
 }
 
 func (s *Server) respond(w http.ResponseWriter, r *http.Request, code int, data interface{}) {
