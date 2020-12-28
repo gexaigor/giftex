@@ -14,12 +14,12 @@ func (s *Server) jwtMiddleware(next http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		notAuth := []string{"/account/create", "/auth"}
+		notAuth := []string{"/account", "/auth"}
 		requestPath := r.URL.Path
 
 		for _, value := range notAuth {
 
-			if value == requestPath {
+			if value == requestPath && r.Method == "POST" {
 				next.ServeHTTP(w, r)
 				return
 			}
